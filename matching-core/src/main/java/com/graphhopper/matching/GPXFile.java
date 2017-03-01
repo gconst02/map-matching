@@ -147,12 +147,46 @@ public class GPXFile {
                 }
 
                 NodeList eleNodes = e.getElementsByTagName("ele");
-                if (eleNodes.getLength() == 0) {
-                    entries.add(new GPXEntry(lat, lon, millis));
-                } else {
-                    double ele = Double.parseDouble(eleNodes.item(0).getTextContent());
-                    entries.add(new GPXEntry(lat, lon, ele, millis));
+                double ele = Double.NaN;
+                if (eleNodes.getLength() != 0) {
+                    ele = Double.parseDouble(eleNodes.item(0).getTextContent());
+                    ele = ele == 0 ? Double.NaN : ele;
                 }
+
+                // Get moving direction
+                NodeList magvarNodes = e.getElementsByTagName("magvar");
+                double magvar = Double.NaN;
+                if (magvarNodes.getLength() != 0) {
+                    magvar = Double.parseDouble(magvarNodes.item(0).getTextContent());
+                    magvar = magvar == 0 ? Double.NaN : magvar;
+                }
+
+                // Get speed
+                NodeList speedNodes = e.getElementsByTagName("mq:speed");
+                double speed = Double.NaN;
+                if (speedNodes.getLength() != 0) {
+                    speed = Double.parseDouble(speedNodes.item(0).getTextContent());
+                    speed = speed == 0 ? Double.NaN : speed;
+                }
+
+                // Get accuracy
+                NodeList accuracyNodes = e.getElementsByTagName("mq:accuracy");
+                double accuracy = Double.NaN;
+                if (accuracyNodes.getLength() != 0) {
+                    accuracy = Double.parseDouble(accuracyNodes.item(0).getTextContent());
+                    accuracy = accuracy == 0 ? Double.NaN : accuracy;
+                }
+
+                // Get bearing
+                NodeList bearingNodes = e.getElementsByTagName("mq:bearing");
+                double bearing = Double.NaN;
+                if (bearingNodes.getLength() != 0) {
+                    bearing = Double.parseDouble(bearingNodes.item(0).getTextContent());
+                    bearing = bearing == 0 ? Double.NaN : bearing;
+                }
+
+                entries.add(new GPXEntry(lat, lon, ele, millis, magvar, speed, accuracy, bearing));
+
                 prevLat = lat;
                 prevLon = lon;
                 prevMillis = millis;
